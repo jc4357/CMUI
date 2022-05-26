@@ -205,24 +205,14 @@ window_category = partial(_window_eval, func=_get_category,filename="category.js
 window_item = partial(_window_eval, func=_get_item,filename="category_item.json")
 window_full = partial(_window_eval, func=_get_full,filename="full.json")
 
-dialog_category = partial(_dialog_eval, func=_get_category,filename="category.json")
-dialog_item = partial(_dialog_eval, func=_get_item,filename="category_item.json")
-dialog_full = partial(_dialog_eval, func=_get_full,filename="full.json")
-
 def evaluate(model, name, batch_size, count_empty=True):
     dialogs = model.data.datasets[name]['origin']
     window_pred_labels_w, window_gold_labels_w = preprocess(model, name, batch_size)
-    infos = {
-        'window': {},
-        'dialog': {},
-    }
-    infos['window']['category'] = window_category(window_pred_labels_w, window_gold_labels_w, count_empty)
-    infos['window']['item'] = window_item(window_pred_labels_w, window_gold_labels_w, count_empty)
-    infos['window']['full'] = window_full(window_pred_labels_w, window_gold_labels_w, count_empty)
+    infos = {}
+    infos['category'] = window_category(window_pred_labels_w, window_gold_labels_w, count_empty)
+    infos['item'] = window_item(window_pred_labels_w, window_gold_labels_w, count_empty)
+    infos['full'] = window_full(window_pred_labels_w, window_gold_labels_w, count_empty)
 
-    infos['dialog']['category'] = dialog_category(window_pred_labels_w, window_gold_labels_w, dialogs, count_empty)
-    infos['dialog']['item'] = dialog_item(window_pred_labels_w, window_gold_labels_w, dialogs, count_empty)
-    infos['dialog']['full'] = dialog_full(window_pred_labels_w, window_gold_labels_w, dialogs, count_empty)
     return infos
 if __name__ == '__main__':
     pass
